@@ -15,7 +15,7 @@ Hands-On Lab.
 -[ ] (Task1) open src/tasks/Aggregation.kt and implement List<User>.aggregate()
 
 ### 1. Blocking Request
-![img.png](img.png)
+![img.png](img/img.png)
 
 ### 2. Callbacks
 The previous solution works, but blocks the thread and therefore freezes the UI. 
@@ -23,16 +23,16 @@ A traditional approach to avoiding this is th use callbacks.
 
 2 ways to make the UI responsive:
 * Move the whole computation to a separate thread T1
-![img_1.png](img_1.png)
+![img_1.png](img/img_1.png)
 * Switch to Retrofit API and start using callbacks instead if blocking calls
 
 Handling the data for each repository should be then divided into 2 parts: first loading, then processing the resulting response. 
 The second "processing" part should be extracted into a callback.
 The loading for each repository can then be started before the result for the previous repository is received.
-![img_2.png](img_2.png)
+![img_2.png](img/img_2.png)
 
 ### 3. Suspend Functions
-![img_3.png](img_3.png)
+![img_3.png](img/img_3.png)
 * thread ~ block = coroutine ~ suspend
 
 Coroutines are often called light-weight threads. 
@@ -56,7 +56,7 @@ The main difference between *async* and *launch*
 * *launch* returns *Job*, which represents the coroutine
 * *Deferred* is a generic type which extends *Job*
 
-![img_4.png](img_4.png)
+![img_4.png](img/img_4.png)
 
 ### 5. Structured Concurrency 
 To start a new coroutine: *launch* / *async* / *runBlocking*
@@ -77,12 +77,12 @@ their lifetime is limited only by the lifetime of the whole application.
 ### 6. Showing Progress ###
 An *updateResults* callback is called after each request is completed.
 
-![img_5.png](img_5.png)
+![img_5.png](img/img_5.png)
 
 We haven't used any concurrency so far --> code is sequential, so we don't need synchronization.
 
 To send requests concurrently and update the intermediate results after getting the response for each repo --> use Channels
-![img_6.png](img_6.png)
+![img_6.png](img/img_6.png)
 
 ### 7. Channels ###
 Writing code with a shared mutable state is known to be difficult and error-prone.
@@ -91,11 +91,11 @@ Coroutines can communicate with each other via channels.
 
 Channels are communication primitives that allow us to pass data between different coroutines.
 One coroutine can send some information to a channel, while the other one can receive this information from it.
-![img_7.png](img_7.png)
+![img_7.png](img/img_7.png)
 
 When needed, many coroutines can send information to the same channel, 
 and many coroutines can receive information from it.
-![img_8.png](img_8.png)
+![img_8.png](img/img_8.png)
 
 We can think of a channel as similar to a collection of elements. 
 There's an important different: unlike collections, a channel can suspend send and receive operations.
@@ -106,18 +106,18 @@ Channel Types:
 The send call will never be suspended. 
 OutOfMemoryException if there's no more memory.
 The difference with a queue appears when a consumer tries to receive from an empty channel and gets suspended until some new elements are sent to this channel.
-![img_9.png](img_9.png)
+![img_9.png](img/img_9.png)
 * Buffered channel -> size is constrained by the specified number.
 Producers can send elements to this channel until the size limit is reached.
 Whe the channel is full, the next send call on it suspends until more free space appears.
-![img_10.png](img_10.png)
+![img_10.png](img/img_10.png)
 * "Rendezvous" channel -> a channel with a buffer = creating a buffered channel with zero size.
 One of the functions (send or receive) always gets suspended until the other is called.
 If the send function is called and there's no suspended receive call ready to process the element, 
 then send suspends.
 If the receive function is called and the channel is empty, then the receive call suspends.
 "rendezvous" name (a meeting at an agreed time and place) refers to the fact that send and receive should meet on time.
-![img_11.png](img_11.png)
+![img_11.png](img/img_11.png)
 * Conflated channel -> a new element send to the conflated channel will overwrite the previously sent element,
 so the receiver will always get only the latest element.
 The send call will never suspend.
