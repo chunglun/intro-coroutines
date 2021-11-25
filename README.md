@@ -9,8 +9,6 @@ Hands-On Lab.
 
 [Tutorial](https://play.kotlinlang.org/hands-on/Introduction%20to%20Coroutines%20and%20Channels/04_Suspend)
 
-> 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
-
 ### Tasks
 -[ ] (Task1) open src/tasks/Aggregation.kt and implement List<User>.aggregate()
 
